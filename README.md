@@ -1,6 +1,6 @@
 # socket-io-mock
-[![NPM](https://nodei.co/npm/socket-io-mock.png?compact=true)](https://npmjs.org/package/socket-io-mock?compact=true)
 [![Build Status](https://travis-ci.org/glemmaPaul/socket-io-mock.svg?branch=master)](https://travis-ci.org/glemmaPaul/socket-io-mock)
+[![npm version](https://badge.fury.io/js/socket-io-mock.svg)](http://badge.fury.io/js/socket-io-mock)
 
 
 A mock to test the socket.io library implementation
