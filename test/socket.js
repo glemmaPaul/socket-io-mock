@@ -46,25 +46,25 @@ describe('Utils: Socket', function(){
     socket.emit("test", eventPayload)
   })
 
-  it('Should add a room to `joinedRooms` when join() is called', function(done) {
+  it('Should add a room to `rooms` when join() is called', function(done) {
 
     socket.join(roomKey)
-    socket.joinedRooms[0].should.be.equal(roomKey)
+    socket.rooms[0].should.be.equal(roomKey)
 
     done()
 
   })
 
-  it('Should remove a room in `joinedRooms` when leave() is called', function(done) {
+  it('Should remove a room in `rooms` when leave() is called', function(done) {
 
     var anotherRoom = 'anotherroom';
     socket.join(roomKey)
     socket.join(anotherRoom)
-    socket.joinedRooms[0].should.be.equal(roomKey)
-    socket.joinedRooms[1].should.be.equal(anotherRoom)
+    socket.rooms[0].should.be.equal(roomKey)
+    socket.rooms[1].should.be.equal(anotherRoom)
 
     socket.leave(anotherRoom)
-    socket.joinedRooms.should.eql([roomKey]);
+    socket.rooms.should.eql([roomKey]);
 
     done()
   })
@@ -88,4 +88,9 @@ describe('Utils: Socket', function(){
 
     socket.broadcast.to(roomKey).emit('test', eventPayload)
   })
+
+  it('should expose socket.rooms which is the same as socket.joinedRooms', function() {
+    socket.rooms.should.equal(socket.joinedRooms);
+  });
+
 })

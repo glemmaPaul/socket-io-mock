@@ -53,7 +53,7 @@ function SocketClient(socketMock) {
  */
 function SocketMock () {
     this.broadcast = {}
-    this.joinedRooms = []
+    this.joinedRooms = this.rooms = []
     this.eventCallbacks = {}
     this.socketClient = new SocketClient(this)
     this.generalCallbacks = {}
