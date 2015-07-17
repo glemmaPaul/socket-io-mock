@@ -54,16 +54,21 @@ describe('Utils: Socket', function(){
     done()
 
   })
+
   it('Should remove a room in `joinedRooms` when leave() is called', function(done) {
 
+    var anotherRoom = 'anotherroom';
     socket.join(roomKey)
+    socket.join(anotherRoom)
     socket.joinedRooms[0].should.be.equal(roomKey)
+    socket.joinedRooms[1].should.be.equal(anotherRoom)
 
-    socket.leave(roomKey)
-    socket.joinedRooms.should.have.length(0)
+    socket.leave(anotherRoom)
+    socket.joinedRooms.should.eql([roomKey]);
 
     done()
   })
+
   it('Should fire `onEmit()` callback when a event is fired in the room', function(done) {
 
     socket.join(roomKey)

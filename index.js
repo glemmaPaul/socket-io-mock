@@ -138,7 +138,8 @@ function SocketMock () {
      * @param  {string} roomKey The room you want to leave
      */
     this.leave = function(roomKey) {
-        this.joinedRooms.splice(roomKey, 1)
+        var index = this.joinedRooms.indexOf(roomKey);
+        this.joinedRooms.splice(index, 1)
     }
 
     /**
