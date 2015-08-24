@@ -10,6 +10,7 @@ describe('Utils: Socket', function(){
     socket = new SocketMock()
     done()
   })
+
   it('should fire event on the server side when on() is assigned', function(done){
     socket.on("test", function(payload) {
       payload.should.have.property('never')
@@ -26,6 +27,14 @@ describe('Utils: Socket', function(){
     })
 
     socket.socketClient.emit("test", eventPayload)
+  })
+
+  it('should accept empty payload', function(done){
+    socket.on("test", function() {
+      done()
+    })
+
+    socket.socketClient.emit("test")
   })
 
   it('should fire event on the client side when on() is assigned', function(done) {

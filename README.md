@@ -5,7 +5,7 @@
 
 A mock to test the socket.io library implementation
 
-# Installation 
+# Installation
 ```bash
 npm install socket-io-mock
 ```
@@ -15,7 +15,7 @@ Simply create new socket mock with:
 ```js
 var mockedSocket = new require('socket-io-mock')
 ```
-And use the socket as if it was a normal Socket.io socket. 
+And use the socket as if it was a normal Socket.io socket.
 
 For example:
 
@@ -26,11 +26,11 @@ var SocketMock = require('socket-io-mock')
 describe('Fast and isolated socket tests', function(){
   it('Sockets should be able to talk to each other without a server', function(done) {
     var socket = new SocketMock()
-    
+
     socket.on('message', function (message) {
       message.should.be.equal('Hello World!')
     })
-    socket.emit('message', 'Hello World!')
+    socket.socketClient.emit('message', 'Hello World!')
   })
 })
 ```

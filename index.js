@@ -20,7 +20,7 @@ function SocketClient(socketMock) {
      */
     this.on = function(eventKey, callback) {
         this.eventCallbacks[eventKey] = callback
-    } 
+    }
 
     /**
      * Emit an event to the server client
@@ -29,6 +29,7 @@ function SocketClient(socketMock) {
      * @param  {function} callback
      */
     this.emit = function(eventKey, payload, callback) {
+        payload = payload || null;
         callback = callback || function() { return true }
         callback(socketMock.emitEvent(eventKey, payload))
     }
@@ -44,7 +45,7 @@ function SocketClient(socketMock) {
         if (typeof this.eventCallbacks[eventKey] === 'function') {
             debug("Event %s on client side is dispatched with payload %s", eventKey, JSON.stringify(payload))
             this.eventCallbacks[eventKey](payload)
-        }   
+        }
     }
 }
 
@@ -89,6 +90,7 @@ function SocketMock () {
      * @param  {object} payload -- Additional payload
      */
     this.emit = function(eventKey, payload) {
+        payload = payload || null;
         if (typeof doneCallback === 'function') {
             doneCallback(self.socketClient.emit(eventKey, createPayload(payload)))
         }
@@ -113,7 +115,7 @@ function SocketMock () {
     this.broadcast.to = function(roomKey) {
         return {
             /**
-             * Emitting 
+             * Emitting
              * @param  {[type]} eventName [description]
              * @param  {[type]} payload   [description]
              */
@@ -147,6 +149,14 @@ function SocketMock () {
      */
     this.monitor = function(value) {
         debug("Monitor: %s", value)
+    }
+
+    /**
+     * Accept connecting to a channel, but all messages goes to all channels
+     * @param  {string} name of the channel (useless)
+     */
+    this.of = function(value) {
+        return this;
     }
 }
 
