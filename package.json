@@ -1,6 +1,6 @@
 {
   "name": "socket-io-mock",
-  "version": "1.0.0",
+  "version": "1.0.42",
   "description": "a mocked version of a socket.io socket for testing",
   "main": "index.js",
   "scripts": {
@@ -26,5 +26,8 @@
     "chai": "^2.2.0",
     "debug": "^2.1.3",
     "mocha": "^2.2.4"
+  },
+  "devDependencies": {
+    "socket-io-mock": "git://github.com/pakokrew/socket-io-mock.git"
   }
 }

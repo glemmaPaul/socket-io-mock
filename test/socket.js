@@ -10,6 +10,18 @@ describe('Utils: Socket', function(){
     socket = new SocketMock()
     done()
   })
+
+  it('should connect server and client with socket', function(done){
+    socket.on("connect", function(socketClient) {
+
+      socketClient.should.be.equal(socket.socketClient)
+
+      done()
+    })
+
+    socket.connectClient()
+  })
+
   it('should fire event on the server side when on() is assigned', function(done){
     socket.on("test", function(payload) {
       payload.should.have.property('never')
@@ -26,6 +38,14 @@ describe('Utils: Socket', function(){
     })
 
     socket.socketClient.emit("test", eventPayload)
+  })
+
+  it('should accept empty payload', function(done){
+    socket.on("test", function() {
+      done()
+    })
+
+    socket.socketClient.emit("test")
   })
 
   it('should fire event on the client side when on() is assigned', function(done) {
@@ -46,6 +66,21 @@ describe('Utils: Socket', function(){
     socket.emit("test", eventPayload)
   })
 
+  it('should broadcast event to all clients', function(done) {
+    socket.socketClient.on("test", function(payload) {
+      payload.should.be.equal("hello")
+
+      done()
+    })
+
+    socket.broadcast("test", "hello")
+  })
+
+  it('client could broadcast to others clients', function() {
+
+    socket.socketClient.broadcast.emit("test", "hello")
+  })
+
   it('Should add a room to `joinedRooms` when join() is called', function(done) {
 
     socket.join(roomKey)
@@ -63,24 +98,5 @@ describe('Utils: Socket', function(){
     socket.joinedRooms.should.have.length(0)
 
     done()
-  })
-  it('Should fire `onEmit()` callback when a event is fired in the room', function(done) {
-
-    socket.join(roomKey)
-
-    var eventPayload = {
-      "test": "123"
-    }
-
-    socket.onEmit('test', function(payload, roomEvent) {
-      roomEvent.should.be.equal(roomKey)
-
-      payload.should.have.property("test")
-      payload.test.should.be.equal("123")
-
-      done()
-    })
-
-    socket.broadcast.to(roomKey).emit('test', eventPayload)
   })
 })

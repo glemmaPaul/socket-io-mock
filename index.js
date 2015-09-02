@@ -20,7 +20,7 @@ function SocketClient(socketMock) {
      */
     this.on = function(eventKey, callback) {
         this.eventCallbacks[eventKey] = callback
-    } 
+    }
 
     /**
      * Emit an event to the server client
@@ -29,6 +29,7 @@ function SocketClient(socketMock) {
      * @param  {function} callback
      */
     this.emit = function(eventKey, payload, callback) {
+        payload = payload || null;
         callback = callback || function() { return true }
         callback(socketMock.emitEvent(eventKey, payload))
     }
@@ -44,15 +45,32 @@ function SocketClient(socketMock) {
         if (typeof this.eventCallbacks[eventKey] === 'function') {
             debug("Event %s on client side is dispatched with payload %s", eventKey, JSON.stringify(payload))
             this.eventCallbacks[eventKey](payload)
-        }   
+        }
     }
+
+    /**
+     * Broadcast to all others players
+     * As we are the only one, its actually do nothing
+     */
+    this.broadcast = {}
+    this.broadcast.emit = function(eventKey, payload) {
+        return;
+
+        socketMock.emit(eventKey, payload);
+    }
+
+    /**
+     * Volatile messages
+     *
+     */
+    this.volatile = {}
+    this.volatile.emit = this.emit
 }
 
 /**
  * A mocking class for the Socket IO Server side
  */
 function SocketMock () {
-    this.broadcast = {}
     this.joinedRooms = []
     this.eventCallbacks = {}
     this.socketClient = new SocketClient(this)
@@ -60,6 +78,21 @@ function SocketMock () {
 
     // self assign, for avoiding this clashing with objects
     var self = this
+
+
+    /**
+     * Emit 'connect' event with correct socket
+     */
+    this.connectClient = function() {
+
+        var eventKey = 'connect';
+
+        if (this.eventCallbacks[eventKey]) {
+            debug("Connecting client socket")
+
+            this.eventCallbacks[eventKey](this.socketClient)
+        }
+    }
 
     /**
      * Emit an event to the server (used by client)
@@ -89,6 +122,7 @@ function SocketMock () {
      * @param  {object} payload -- Additional payload
      */
     this.emit = function(eventKey, payload) {
+        payload = payload || null;
         if (typeof doneCallback === 'function') {
             doneCallback(self.socketClient.emit(eventKey, createPayload(payload)))
         }
@@ -107,23 +141,11 @@ function SocketMock () {
     }
 
     /**
-     * Broadcast to room
+     * Broadcast to everybody
+     * Since only one client connected, equivalent to emit
      * @param  {string} roomKey the roomkey which need to be attached to
      */
-    this.broadcast.to = function(roomKey) {
-        return {
-            /**
-             * Emitting 
-             * @param  {[type]} eventName [description]
-             * @param  {[type]} payload   [description]
-             */
-            emit: function(eventKey, payload) {
-                if (self.generalCallbacks[eventKey]) {
-                    self.generalCallbacks[eventKey](createPayload(payload), roomKey)
-                }
-            }
-        }
-    }
+    this.broadcast = this.emit
 
     /**
      * Joining a room
@@ -147,6 +169,14 @@ function SocketMock () {
      */
     this.monitor = function(value) {
         debug("Monitor: %s", value)
+    }
+
+    /**
+     * Accept connecting to a channel, but all messages goes to all channels
+     * @param  {string} name of the channel (useless)
+     */
+    this.of = function(value) {
+        return this;
     }
 }
 
