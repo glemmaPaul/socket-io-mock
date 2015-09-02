@@ -11,6 +11,17 @@ describe('Utils: Socket', function(){
     done()
   })
 
+  it('should connect server and client with socket', function(done){
+    socket.on("connect", function(socketClient) {
+
+      socketClient.should.be.equal(socket.socketClient)
+
+      done()
+    })
+
+    socket.connectClient()
+  })
+
   it('should fire event on the server side when on() is assigned', function(done){
     socket.on("test", function(payload) {
       payload.should.have.property('never')

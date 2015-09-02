@@ -48,8 +48,11 @@ function SocketClient(socketMock) {
         }
     }
 
+    /**
+     * Broadcast to all others players
+     * As we are the only one, its actually do nothing
+     */
     this.broadcast = function(eventKey, payload) {
-        // It should emit to all others user, but we are the only one so dont emit
         return;
 
         socketMock.emit(eventKey, payload);
@@ -67,6 +70,21 @@ function SocketMock () {
 
     // self assign, for avoiding this clashing with objects
     var self = this
+
+
+    /**
+     * Emit 'connect' event with correct socket
+     */
+    this.connectClient = function() {
+
+        var eventKey = 'connect';
+
+        if (this.eventCallbacks[eventKey]) {
+            debug("Connecting client socket")
+
+            this.eventCallbacks[eventKey](this.socketClient)
+        }
+    }
 
     /**
      * Emit an event to the server (used by client)
