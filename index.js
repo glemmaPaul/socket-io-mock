@@ -58,6 +58,13 @@ function SocketClient(socketMock) {
 
         socketMock.emit(eventKey, payload);
     }
+
+    /**
+     * Volatile messages
+     *
+     */
+    this.volatile = {}
+    this.volatile.emit = this.emit
 }
 
 /**
