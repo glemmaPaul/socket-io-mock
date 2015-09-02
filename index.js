@@ -52,7 +52,8 @@ function SocketClient(socketMock) {
      * Broadcast to all others players
      * As we are the only one, its actually do nothing
      */
-    this.broadcast = function(eventKey, payload) {
+    this.broadcast = {}
+    this.broadcast.emit = function(eventKey, payload) {
         return;
 
         socketMock.emit(eventKey, payload);

@@ -76,6 +76,11 @@ describe('Utils: Socket', function(){
     socket.broadcast("test", "hello")
   })
 
+  it('client could broadcast to others clients', function() {
+
+    socket.socketClient.broadcast.emit("test", "hello")
+  })
+
   it('Should add a room to `joinedRooms` when join() is called', function(done) {
 
     socket.join(roomKey)
