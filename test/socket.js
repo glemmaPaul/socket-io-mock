@@ -55,6 +55,16 @@ describe('Utils: Socket', function(){
     socket.emit("test", eventPayload)
   })
 
+  it('should broadcast event to all clients', function(done) {
+    socket.socketClient.on("test", function(payload) {
+      payload.should.be.equal("hello")
+
+      done()
+    })
+
+    socket.broadcast("test", "hello")
+  })
+
   it('Should add a room to `joinedRooms` when join() is called', function(done) {
 
     socket.join(roomKey)
@@ -72,24 +82,5 @@ describe('Utils: Socket', function(){
     socket.joinedRooms.should.have.length(0)
 
     done()
-  })
-  it('Should fire `onEmit()` callback when a event is fired in the room', function(done) {
-
-    socket.join(roomKey)
-
-    var eventPayload = {
-      "test": "123"
-    }
-
-    socket.onEmit('test', function(payload, roomEvent) {
-      roomEvent.should.be.equal(roomKey)
-
-      payload.should.have.property("test")
-      payload.test.should.be.equal("123")
-
-      done()
-    })
-
-    socket.broadcast.to(roomKey).emit('test', eventPayload)
   })
 })

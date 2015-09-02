@@ -4,6 +4,7 @@
 
 
 A mock to test the socket.io library implementation
+Forked and adapted to match my version of socketIO
 
 # Installation
 ```bash

@@ -47,13 +47,19 @@ function SocketClient(socketMock) {
             this.eventCallbacks[eventKey](payload)
         }
     }
+
+    this.broadcast = function(eventKey, payload) {
+        // It should emit to all others user, but we are the only one so dont emit
+        return;
+
+        socketMock.emit(eventKey, payload);
+    }
 }
 
 /**
  * A mocking class for the Socket IO Server side
  */
 function SocketMock () {
-    this.broadcast = {}
     this.joinedRooms = []
     this.eventCallbacks = {}
     this.socketClient = new SocketClient(this)
@@ -109,23 +115,11 @@ function SocketMock () {
     }
 
     /**
-     * Broadcast to room
+     * Broadcast to everybody
+     * Since only one client connected, equivalent to emit
      * @param  {string} roomKey the roomkey which need to be attached to
      */
-    this.broadcast.to = function(roomKey) {
-        return {
-            /**
-             * Emitting
-             * @param  {[type]} eventName [description]
-             * @param  {[type]} payload   [description]
-             */
-            emit: function(eventKey, payload) {
-                if (self.generalCallbacks[eventKey]) {
-                    self.generalCallbacks[eventKey](createPayload(payload), roomKey)
-                }
-            }
-        }
-    }
+    this.broadcast = this.emit
 
     /**
      * Joining a room
