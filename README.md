@@ -30,7 +30,7 @@ describe('Fast and isolated socket tests', function(){
     socket.on('message', function (message) {
       message.should.be.equal('Hello World!')
     })
-    socket.emit('message', 'Hello World!')
+    socket.socketClient.emit('message', 'Hello World!')
   })
 })
 ```
