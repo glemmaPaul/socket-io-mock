@@ -1,5 +1,3 @@
-'use strict'
-
 var debug = require('debug')('chat:tests:fixtures:socketmock')
 
 var createPayload = function(object) {
